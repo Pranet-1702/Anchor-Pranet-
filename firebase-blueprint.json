@@ -1,0 +1,184 @@
+{
+  "entities": {
+    "event": {
+      "title": "Event",
+      "description": "Portfolio event details hosted or emceed by Pranet Bhosale",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "enum": ["cultural", "hackathons", "technical", "alumni", "seminars"] },
+        "categoryLabel": { "type": "string", "maxLength": 100 },
+        "organizer": { "type": "string", "maxLength": 200 },
+        "location": { "type": "string", "maxLength": 200 },
+        "date": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "highlights": { "type": "array" },
+        "image": { "type": "string", "maxLength": 2000 },
+        "imageAlt": { "type": "string", "maxLength": 500 },
+        "is_published": { "type": "boolean" },
+        "is_featured": { "type": "boolean" },
+        "sort_order": { "type": "number" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      },
+      "required": ["id", "title", "category", "date", "description"]
+    },
+    "gallery_image": {
+      "title": "GalleryImage",
+      "description": "Photograph from stage events and anchors",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "src": { "type": "string", "maxLength": 2000 },
+        "alt": { "type": "string", "maxLength": 500 },
+        "title": { "type": "string", "maxLength": 200 },
+        "subtitle": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "enum": ["stage", "felicitation", "hackathon", "formal"] },
+        "aspectRatio": { "type": "string", "enum": ["tall", "wide", "square"] },
+        "is_published": { "type": "boolean" },
+        "sort_order": { "type": "number" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      },
+      "required": ["id", "src", "title", "category"]
+    },
+    "gallery_video": {
+      "title": "GalleryVideo",
+      "description": "Stage performance showreel or video clip",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "video_url": { "type": "string", "maxLength": 2000 },
+        "thumbnail_url": { "type": "string", "maxLength": 2000 },
+        "category": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "is_published": { "type": "boolean" },
+        "sort_order": { "type": "number" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      },
+      "required": ["id", "title", "video_url"]
+    },
+    "achievement": {
+      "title": "Achievement",
+      "description": "Awards, citations, and recognition milestones",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "subtitle": { "type": "string", "maxLength": 200 },
+        "organization": { "type": "string", "maxLength": 200 },
+        "year": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 3000 },
+        "image": { "type": "string", "maxLength": 2000 },
+        "imageAlt": { "type": "string", "maxLength": 500 },
+        "verifiedBadge": { "type": "string", "maxLength": 100 },
+        "sort_order": { "type": "number" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["id", "title", "organization", "year", "description"]
+    },
+    "service": {
+      "title": "Service",
+      "description": "Professional emcee and hosting service offerings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "tagline": { "type": "string", "maxLength": 300 },
+        "description": { "type": "string", "maxLength": 3000 },
+        "keyDeliverables": { "type": "array" },
+        "formats": { "type": "array" },
+        "recommendedAudience": { "type": "string", "maxLength": 300 },
+        "is_featured": { "type": "boolean" },
+        "sort_order": { "type": "number" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["id", "title", "description"]
+    },
+    "feedback": {
+      "title": "Feedback",
+      "description": "Client reviews and attendee testimonials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "full_name": { "type": "string", "maxLength": 200 },
+        "organization": { "type": "string", "maxLength": 200 },
+        "role": { "type": "string", "maxLength": 200 },
+        "event_name": { "type": "string", "maxLength": 200 },
+        "feedback": { "type": "string", "maxLength": 3000 },
+        "rating": { "type": "number" },
+        "public_consent": { "type": "boolean" },
+        "is_featured": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "created_at": { "type": "string" },
+        "moderated_at": { "type": "string" }
+      },
+      "required": ["id", "full_name", "role", "feedback", "rating", "status"]
+    },
+    "contact_inquiry": {
+      "title": "ContactInquiry",
+      "description": "Direct inquiries from prospective clients and organizers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 100 },
+        "event_type": { "type": "string", "maxLength": 200 },
+        "event_date": { "type": "string", "maxLength": 100 },
+        "message": { "type": "string", "maxLength": 5000 },
+        "status": { "type": "string", "enum": ["new", "contacted", "archived"] },
+        "created_at": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "message", "status"]
+    },
+    "site_setting": {
+      "title": "SiteSetting",
+      "description": "Website configuration, booking settings, and bio info",
+      "type": "object",
+      "properties": {
+        "key": { "type": "string", "maxLength": 100 },
+        "value": { "type": "object" },
+        "updated_at": { "type": "string" }
+      },
+      "required": ["key", "value"]
+    }
+  },
+  "firestore": {
+    "/events/{eventId}": {
+      "schema": "event",
+      "description": "Live events hosted by Pranet Bhosale"
+    },
+    "/gallery_images/{imageId}": {
+      "schema": "gallery_image",
+      "description": "Gallery photographs"
+    },
+    "/gallery_videos/{videoId}": {
+      "schema": "gallery_video",
+      "description": "Video showreels and highlight clips"
+    },
+    "/achievements/{achievementId}": {
+      "schema": "achievement",
+      "description": "Awards and honors"
+    },
+    "/services/{serviceId}": {
+      "schema": "service",
+      "description": "Anchoring services offered"
+    },
+    "/feedbacks/{feedbackId}": {
+      "schema": "feedback",
+      "description": "Testimonials and public reviews"
+    },
+    "/contact_inquiries/{inquiryId}": {
+      "schema": "contact_inquiry",
+      "description": "Client bookings and contact form submissions"
+    },
+    "/site_settings/{settingId}": {
+      "schema": "site_setting",
+      "description": "Global website settings and personal bio"
+    }
+  }
+}

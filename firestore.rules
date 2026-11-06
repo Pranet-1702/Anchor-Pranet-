@@ -1,0 +1,158 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Security Helper Functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isMasterAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email != null &&
+        request.auth.token.email.lower() == 'pranetbhosale@gmail.com';
+    }
+
+    // Entity Validators
+    function isValidEvent(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.category is string && (data.category in ['cultural', 'hackathons', 'technical', 'alumni', 'seminars']) &&
+             data.date is string && data.date.size() > 0 && data.date.size() <= 100 &&
+             data.description is string && data.description.size() <= 5000;
+    }
+
+    function isValidGalleryImage(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.src is string && data.src.size() > 0 && data.src.size() <= 2000 &&
+             data.title is string && data.title.size() <= 200 &&
+             data.category is string && (data.category in ['stage', 'felicitation', 'hackathon', 'formal']);
+    }
+
+    function isValidGalleryVideo(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.video_url is string && data.video_url.size() > 0 && data.video_url.size() <= 2000;
+    }
+
+    function isValidAchievement(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.organization is string && data.organization.size() <= 200 &&
+             data.year is string && data.year.size() <= 50 &&
+             (!('is_published' in data) || data.is_published is bool);
+    }
+
+    function isValidService(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.description is string && data.description.size() <= 3000 &&
+             (!('is_published' in data) || data.is_published is bool);
+    }
+
+    function isValidFeedback(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             (('full_name' in data && data.full_name is string && data.full_name.size() > 0 && data.full_name.size() <= 200) ||
+              ('fullName' in data && data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 200)) &&
+             (('feedback' in data && data.feedback is string && data.feedback.size() > 0 && data.feedback.size() <= 3000) ||
+              ('feedbackText' in data && data.feedbackText is string && data.feedbackText.size() > 0 && data.feedbackText.size() <= 3000)) &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.status is string && (data.status in ['pending', 'approved', 'rejected']);
+    }
+
+    function isValidContactInquiry(data) {
+      return data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             data.email is string && data.email.size() > 0 && data.email.size() <= 200 &&
+             data.message is string && data.message.size() > 0 && data.message.size() <= 5000 &&
+             data.status is string && (data.status in ['new', 'contacted', 'archived']);
+    }
+
+    function isValidSiteSetting(data) {
+      return data.key is string && data.key.size() <= 100 &&
+             data.value is map;
+    }
+
+    // 1. Events Collection
+    match /events/{eventId} {
+      allow get, list: if resource.data.is_published == true || isMasterAdmin();
+      allow create: if isMasterAdmin() && isValidId(eventId) && isValidEvent(incoming());
+      allow update: if isMasterAdmin() && isValidId(eventId) && isValidEvent(incoming());
+      allow delete: if isMasterAdmin() && isValidId(eventId);
+    }
+
+    // 2. Gallery Images Collection
+    match /gallery_images/{imageId} {
+      allow get, list: if resource.data.is_published == true || isMasterAdmin();
+      allow create: if isMasterAdmin() && isValidId(imageId) && isValidGalleryImage(incoming());
+      allow update: if isMasterAdmin() && isValidId(imageId) && isValidGalleryImage(incoming());
+      allow delete: if isMasterAdmin() && isValidId(imageId);
+    }
+
+    // 3. Gallery Videos Collection
+    match /gallery_videos/{videoId} {
+      allow get, list: if resource.data.is_published == true || isMasterAdmin();
+      allow create: if isMasterAdmin() && isValidId(videoId) && isValidGalleryVideo(incoming());
+      allow update: if isMasterAdmin() && isValidId(videoId) && isValidGalleryVideo(incoming());
+      allow delete: if isMasterAdmin() && isValidId(videoId);
+    }
+
+    // 4. Achievements Collection
+    match /achievements/{achievementId} {
+      allow get, list: if (!('is_published' in resource.data) || resource.data.is_published == true) || isMasterAdmin();
+      allow create: if isMasterAdmin() && isValidId(achievementId) && isValidAchievement(incoming());
+      allow update: if isMasterAdmin() && isValidId(achievementId) && isValidAchievement(incoming());
+      allow delete: if isMasterAdmin() && isValidId(achievementId);
+    }
+
+    // 5. Services Collection
+    match /services/{serviceId} {
+      allow get, list: if (!('is_published' in resource.data) || resource.data.is_published == true) || isMasterAdmin();
+      allow create: if isMasterAdmin() && isValidId(serviceId) && isValidService(incoming());
+      allow update: if isMasterAdmin() && isValidId(serviceId) && isValidService(incoming());
+      allow delete: if isMasterAdmin() && isValidId(serviceId);
+    }
+
+    // 6. Feedbacks Collection
+    match /feedbacks/{feedbackId} {
+      allow get, list: if (resource.data.status == 'approved' && resource.data.public_consent == true) || isMasterAdmin();
+      allow create: if isValidId(feedbackId) && isValidFeedback(incoming()) && incoming().status == 'pending';
+      allow update: if isMasterAdmin() && isValidId(feedbackId) && isValidFeedback(incoming());
+      allow delete: if isMasterAdmin() && isValidId(feedbackId);
+    }
+
+    // 7. Contact Inquiries Collection
+    match /contact_inquiries/{inquiryId} {
+      allow get, list: if isMasterAdmin();
+      allow create: if isValidId(inquiryId) && isValidContactInquiry(incoming()) && incoming().status == 'new';
+      allow update: if isMasterAdmin() && isValidId(inquiryId) && isValidContactInquiry(incoming());
+      allow delete: if isMasterAdmin() && isValidId(inquiryId);
+    }
+
+    // 8. Site Settings Collection
+    match /site_settings/{settingId} {
+      allow get: if (settingId in ['general', 'personal_info']) || isMasterAdmin();
+      allow list: if isMasterAdmin();
+      allow create: if isMasterAdmin() && isValidId(settingId) && isValidSiteSetting(incoming());
+      allow update: if isMasterAdmin() && isValidId(settingId) && isValidSiteSetting(incoming());
+      allow delete: if isMasterAdmin() && isValidId(settingId);
+    }
+  }
+}

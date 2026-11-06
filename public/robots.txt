@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /feedback
+
+Sitemap: https://anchorrpranet.vercel.app/sitemap.xml

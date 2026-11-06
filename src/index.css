@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-display: "Cinzel", "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  
+  --color-gold-50: #fbf7ee;
+  --color-gold-100: #f5eed5;
+  --color-gold-200: #ebdcaf;
+  --color-gold-300: #dfc480;
+  --color-gold-400: #d4af37;
+  --color-gold-500: #c59b27;
+  --color-gold-600: #aa7e1d;
+  --color-gold-700: #885f19;
+  --color-gold-800: #6f4c19;
+  --color-gold-900: #5c3f1a;
+
+  --color-champagne: #f4e8d1;
+  --color-dark-950: #070709;
+  --color-dark-900: #0a0a0c;
+  --color-dark-850: #0f0f13;
+  --color-dark-800: #15151c;
+  --color-dark-750: #1c1c24;
+  --color-dark-700: #262632;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: #0a0a0c;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Custom luxury gold text gradients */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #f7e7ce 0%, #d4af37 50%, #aa7e1d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-light {
+  background: linear-gradient(135deg, #ffffff 0%, #f4e8d1 50%, #dfc480 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtle gold border glow */
+.gold-border-glow {
+  box-shadow: 0 0 20px -5px rgba(212, 175, 55, 0.15);
+}
+
+/* Luxury card surface */
+.luxury-card {
+  background: linear-gradient(180deg, rgba(26, 26, 34, 0.8) 0%, rgba(15, 15, 20, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.luxury-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card-hover:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px -5px rgba(212, 175, 55, 0.12);
+}
+
+/* Cinematic Shimmer & Light Trails */
+@keyframes shimmerSweep {
+  0% { transform: translateX(-150%); }
+  50% { transform: translateX(150%); }
+  100% { transform: translateX(150%); }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmerSweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes lightTrailDrift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(25px, -20px) scale(1.12);
+    opacity: 0.45;
+  }
+}
+
+.animate-light-trail {
+  animation: lightTrailDrift 8s ease-in-out infinite;
+}
+
+@keyframes slowGlowPulse {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.05);
+  }
+}
+
+.animate-glow-pulse {
+  animation: slowGlowPulse 6s ease-in-out infinite;
+}
+
+/* Accessible focus visible rings */
+:focus-visible {
+  outline: 2px solid #d4af37 !important;
+  outline-offset: 2px !important;
+}
+
+/* Strict reduced motion adherence */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
